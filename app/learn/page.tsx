@@ -1,9 +1,9 @@
-import Link from "next/link";
+import ContentNav from "../component/ContentNav";
 
 export default function Home() {
   return (
     <main>
-      HOME
+      <ContentNav />
     </main>
   );
 }
