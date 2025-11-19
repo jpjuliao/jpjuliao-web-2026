@@ -1,5 +1,7 @@
 # Software Engineering Fundamentals
 
+This document provides a comprehensive overview of the fundamental concepts and principles in software engineering. It covers a wide range of topics essential for understanding the field, from algorithms and data structures to software architecture and project management.
+
 ## Table Of Contents
 
 1. Algorithms and Data Structures
