@@ -6,16 +6,14 @@ interface FolderStructure {
   [key: string]: FolderStructure | null;
 }
 
-
 export default function ContentNav() {
   const contentDir = path.join(process.cwd(), 'content');
-  const files = getContentFiles();
+  const files = getContentFiles(contentDir);
 
   const buildStructure = (files: string[]): FolderStructure => {
     const structure: FolderStructure = {};
 
     files.forEach(file => {
-      console.log(file);
       const slug = file.replace(contentDir, '');
       const parts = slug.split('/');
 
@@ -41,7 +39,9 @@ export default function ContentNav() {
         {Object.keys(structure).map(key => {
           const isFolder = structure[key] !== null;
           const fullPath = basePath ? `${basePath}/${key}` : key;
-          const title = isFolder ? key : getFileTitle(path.join(contentDir, fullPath));
+          const title = isFolder ? key : getFileTitle(
+            path.join(contentDir, fullPath)
+          );
 
           return (
             <li key={fullPath}>
@@ -61,7 +61,6 @@ export default function ContentNav() {
   };
 
   const structure = buildStructure(files);
-  console.log('build structure', structure);
 
   return (
     <nav>

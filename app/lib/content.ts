@@ -1,9 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-const contentDir = path.join(process.cwd(), 'content');
-
-export function getContentFiles() {
+export function getContentFiles(contentDir: string) {
   const files: string[] = [];
 
   function readDir(dir: string) {
@@ -31,7 +29,7 @@ export function getFileTitle(filePath: string): string {
   return match ? match[1] : path.basename(filePath, path.extname(filePath));
 }
 
-export function getContentBySlug(slug: string) {
+export function getContentBySlug(slug: string, contentDir: string) {
   const filePath = path.join(contentDir, `${slug}.md`);
   if (!fs.existsSync(filePath)) return null;
   return fs.readFileSync(filePath, 'utf-8');
