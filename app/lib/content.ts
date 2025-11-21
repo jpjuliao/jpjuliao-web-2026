@@ -8,9 +8,11 @@ export function getContentFiles() {
 
   function readDir(dir: string) {
     const entries = fs.readdirSync(dir);
+
     entries.forEach(entry => {
       const fullPath = path.join(dir, entry);
       const stat = fs.statSync(fullPath);
+
       if (stat.isDirectory()) {
         readDir(fullPath);
       } else if (entry.endsWith('.md') || entry.endsWith('.txt')) {
