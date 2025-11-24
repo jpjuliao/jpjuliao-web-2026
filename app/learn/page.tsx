@@ -1,9 +1,10 @@
-import ContentNavServer from "../component/content-nav/ContentNav.server";
+import ContentNavServer from "@/app/component/content-nav/ContentNav.server";
 
-export default function Home() {
+export default function LearnPage() {
   return (
-    <main>
+    <div>
+      <h1>Learn</h1>
       <ContentNavServer />
-    </main>
+    </div>
   );
 }

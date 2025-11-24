@@ -1,19 +1,23 @@
 'use client';
 
-type filesType = {
-  files: string[];
-}
+import { use } from 'react';
+import Link from 'next/link';
+import { FileNode } from '@/app/lib/get-files';
 
-export default function ContentNavClient({ files }: filesType) {
-  console.log(files);
+export default function ContentNavClient(
+  { filesPromise }: { filesPromise: Promise<FileNode[]> }
+) {
+  const files = use(filesPromise);
+  const link = (path: string) => `/learn/${path}`.replace(/\.mdx?$/, '');
   return (
     <div>
-      <h1>Contents</h1>
       <ul>
         {files.map((file) => (
-          <li key={file}>{file}</li>
+          <li key={file.path}>
+            <Link href={link(file.path)}>{file.name}</Link>
+          </li>
         ))}
       </ul>
     </div>
-  )
+  );
 }

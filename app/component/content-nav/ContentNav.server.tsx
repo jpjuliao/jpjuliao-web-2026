@@ -1,31 +1,17 @@
-import path from 'path';
-import fs from 'fs';
-import ContentNavClient from './ContentNav.client';
+import { use, Suspense } from "react";
+import ContentNavClient from "./ContentNav.client";
 
-export default function ContentNavServer() {
-  const contentDir = path.join(process.cwd(), 'content');
-
-  let files: string[] = [];
-  const getFiles = (folder: string) => {
-    console.log(folder);
-    fs.readdirSync(folder).forEach((file) => {
-      const filePath = path.join(folder, file);
-      const stat = fs.statSync(filePath);
-      if (stat.isDirectory()) {
-        const folderName = path.basename(filePath);
-        files.push(folderName);
-        // getFiles(filePath);
-      } else {
-        files.push(path.basename(filePath));
-      }
-    });
-  }
-
-  getFiles(contentDir);
-
+export default function ContentNavServer({ slugPromise = Promise.resolve([]) }: { slugPromise: Promise<string[]> }) {
+  const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+  const url = new URL(`${baseUrl}/api/contents`);
+  const slug = use(slugPromise);
+  url.searchParams.set('slug', slug.join('/'));
+  const filesPromise = fetch(url).then((res) => res.json());
   return (
     <div>
-      <ContentNavClient files={files} />
+      <Suspense fallback={<div>Loading...</div>}>
+        <ContentNavClient filesPromise={filesPromise} />
+      </Suspense>
     </div>
-  )
+  );
 }

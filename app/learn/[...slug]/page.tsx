@@ -1,37 +1,16 @@
-import fs from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
-import { remark } from 'remark';
-import html from 'remark-html';
+import { Suspense, use } from "react";
+import ContentNavServer from "@/app/component/content-nav/ContentNav.server";
 
-const contentDir = path.join(process.cwd(), 'content');
-
-async function getContentFromSlug(slugArray: string[]) {
-  const slugPath = slugArray.join('/');
-  const fullPath = path.join(contentDir, `${slugPath}.md`);
-  const fileContents = fs.readFileSync(fullPath, 'utf8');
-
-  const { data, content } = matter(fileContents);
-
-  const processedContent = await remark()
-    .use(html)
-    .process(content);
-  const contentHtml = processedContent.toString();
-
-  return {
-    data,
-    contentHtml,
-  };
-}
-
-export default async function Page({ params }: { params: { slug: string[] } }) {
-  const { slug } = await params;
-  const { data, contentHtml } = await getContentFromSlug(slug);
-
+export default function Page(
+  { params }: { params: Promise<{ slug: string[] }> }
+) {
+  const { slug } = use(params);
   return (
-    <main>
-      <h1>{data.title}</h1>
-      <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
-    </main>
+    <div>
+      <Suspense fallback={<div>Loading...</div>}>
+        <ContentNavServer slugPromise={Promise.resolve(slug)} />
+      </Suspense>
+      <h1>{slug.join('/')}</h1>
+    </div>
   );
 }
